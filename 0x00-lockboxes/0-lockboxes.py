@@ -11,7 +11,7 @@ def canUnlockAll(boxes):
             return keys
         all_keys = keys
         for i in boxes[j]:
-            if i not in keys or keys[i] == 0:
+            if (i not in keys or keys[i] == 0) and i < lenght_boxes:
                 j = i
                 all_keys = hola(j, keys, lenght_boxes)
         return all_keys
