@@ -4,6 +4,8 @@
 def canUnlockAll(boxes):
     """open all boxes"""
     lenght_boxes = len(boxes)
+    if not lenght_boxes:
+        return False
 
     def list_open_boxes(j, keys, lenght_boxes):
         keys.append(j)
