@@ -4,33 +4,69 @@
  * swap_numbers - swap two numbers in nodes
  * @node_1: first pointer node of binary_trees_t
  * @node_2: second pointer node of binary_trees_t
+ * @root: pointer to pointer of first node of binary_trees_t
  * Return: 1 on succes otherwise 0
  */
-int swap_numbers(heap_t *node_1, heap_t *node_2)
+int swap_numbers(heap_t *node_1, heap_t *node_2, heap_t **root)
 {
-	int temp_num = 0;
+	heap_t *temp_left = NULL, *temp_right = NULL;
 
-	temp_num = node_1->n;
-	node_1->n = node_2->n;
-	node_2->n = temp_num;
+	temp_left = node_1->left;
+	temp_right = node_1->right;
+
+	if (node_1->left)
+		node_1->left->parent = node_2;
+	if (node_1->right)
+		node_1->right->parent = node_2;
+	node_1->parent = node_2->parent;
+	if (node_1 == node_2->left)
+	{
+		node_1->left = node_2;
+		node_1->right = node_2->right;
+	}
+	else
+	{
+		node_1->right = node_2;
+		node_1->left = node_2->left;
+	}
+
+	if (node_2->parent)
+	{
+		if (node_2->parent->left == node_2)
+			node_2->parent->left = node_1;
+		else
+			node_2->parent->right = node_1;
+	}
+	else
+		*root = node_1;
+
+	if (node_2->left && node_2->left != node_1)
+		node_2->left->parent = node_1;
+	if (node_2->right && node_2->right != node_1)
+		node_2->right->parent = node_1;
+	node_2->parent = node_1;
+	node_2->left = temp_left;
+	node_2->right = temp_right;
+
 	return (1);
 }
 
 /**
  * sort_max_heap - check if a node can store the new node
  * @new_node: address of the new element
+ * @root: pointer to pointer of first node of binary_trees_t
  * Return: 1 on succes otherwise 0
  */
-int sort_max_heap(heap_t *new_node)
+int sort_max_heap(heap_t *new_node, heap_t **root)
 {
 	heap_t *temp_node = NULL;
 
 	temp_node = new_node;
 	while (temp_node->parent && temp_node->n > temp_node->parent->n)
 	{
-		swap_numbers(temp_node, temp_node->parent);
-		temp_node = temp_node->parent;
+		swap_numbers(temp_node, temp_node->parent, root);
 	}
+
 	return (1);
 }
 
@@ -57,7 +93,7 @@ int pow_two(int tree_levels)
  * @tree_levels: current height of the binary_tree
  * Return: 1 on succes otherwise 0
  */
-int check_node(heap_t *root, heap_t *new_node, int tree_levels)
+int check_node(heap_t **root, heap_t *new_node, int tree_levels)
 {
 	heap_t *relative_root = NULL;
 	int index = 0, num_nodes = 1, deep_num = 0;
@@ -65,7 +101,7 @@ int check_node(heap_t *root, heap_t *new_node, int tree_levels)
 	num_nodes = pow_two(tree_levels);
 	for (index = 0; index < num_nodes; index++)
 	{
-		relative_root = root;
+		relative_root = *root;
 		deep_num = 0;
 		while (deep_num < tree_levels)
 		{
@@ -83,9 +119,10 @@ int check_node(heap_t *root, heap_t *new_node, int tree_levels)
 		else
 			continue;
 		new_node->parent = relative_root;
-		sort_max_heap(new_node);
+		sort_max_heap(new_node, root);
 		return (1);
 	}
+
 	return (0);
 }
 
@@ -110,7 +147,7 @@ heap_t *heap_insert(heap_t **root, int value)
 		return (new_node);
 	}
 
-	while (!check_node(*root, new_node, tree_levels))
+	while (!check_node(root, new_node, tree_levels))
 	{
 		tree_levels++;
 	}
