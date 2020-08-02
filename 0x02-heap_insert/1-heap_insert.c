@@ -97,6 +97,7 @@ int check_node(heap_t **root, heap_t *new_node, int tree_levels)
 {
 	heap_t *relative_root = NULL;
 	int index = 0, num_nodes = 1, deep_num = 0;
+	float levels = 0, one_node = 0;
 
 	num_nodes = pow_two(tree_levels);
 	for (index = 0; index < num_nodes; index++)
@@ -105,8 +106,10 @@ int check_node(heap_t **root, heap_t *new_node, int tree_levels)
 		deep_num = 0;
 		while (deep_num < tree_levels)
 		{
-			if (pow_two(tree_levels) / (index + 1) <
-				(pow_two(tree_levels) / pow_two(tree_levels - 1 - deep_num)))
+			one_node = pow_two(tree_levels) / (index + 1);
+			levels = (pow_two(tree_levels) /
+				pow_two(tree_levels - 1 - deep_num));
+			if (one_node < levels)
 				relative_root = relative_root->right;
 			else
 				relative_root = relative_root->left;
