@@ -90,42 +90,35 @@ int pow_two(int tree_levels)
  * check_node - check if a node can store the new node
  * @root: pointer to pointer of first node of binary_trees_t
  * @new_node: address of the new element
+ * @start_lev: address of the new element
  * @tree_levels: current height of the binary_tree
  * Return: 1 on succes otherwise 0
  */
-int check_node(heap_t **root, heap_t *new_node, int tree_levels)
+int check_node(heap_t *root, heap_t *new_node, int tree_levels, int start_lev)
 {
-	heap_t *relative_root = NULL;
-	int index = 0, num_nodes = 1, deep_num = 0;
-	float levels = 0, one_node = 0;
+	int find = 0;
 
-	num_nodes = pow_two(tree_levels);
-	for (index = 0; index < num_nodes; index++)
+	if (start_lev > tree_levels)
+		return (0);
+
+	if (!root->left)
 	{
-		relative_root = *root;
-		deep_num = 0;
-		while (deep_num < tree_levels)
-		{
-			one_node = pow_two(tree_levels) / (index + 1);
-			levels = (pow_two(tree_levels) /
-				pow_two(tree_levels - 1 - deep_num));
-			if (one_node < levels)
-				relative_root = relative_root->right;
-			else
-				relative_root = relative_root->left;
-			deep_num++;
-		}
-		if (!(relative_root->left))
-			relative_root->left = new_node;
-		else if (!(relative_root->right))
-			relative_root->right = new_node;
-		else
-			continue;
-		new_node->parent = relative_root;
-		sort_max_heap(new_node, root);
+		root->left = new_node;
+		new_node->parent = root;
 		return (1);
 	}
-
+	else if (!root->right)
+	{
+		root->right = new_node;
+		new_node->parent = root;
+		return (1);
+	}
+	find = check_node(root->left, new_node, tree_levels, start_lev + 1);
+	if (find)
+		return (1);
+	find = check_node(root->right, new_node, tree_levels, start_lev + 1);
+	if (find)
+		return (1);
 	return (0);
 }
 
@@ -138,7 +131,7 @@ int check_node(heap_t **root, heap_t *new_node, int tree_levels)
 heap_t *heap_insert(heap_t **root, int value)
 {
 	heap_t *new_node = NULL;
-	int tree_levels = 0;
+	int tree_levels = 0, parent_new_node;
 
 	new_node = binary_tree_node(NULL, value);
 	if (!new_node)
@@ -150,10 +143,11 @@ heap_t *heap_insert(heap_t **root, int value)
 		return (new_node);
 	}
 
-	while (!check_node(root, new_node, tree_levels))
-	{
+	do {
+		parent_new_node = check_node(*root, new_node, tree_levels, 0);
 		tree_levels++;
-	}
+	} while (!parent_new_node);
 
+	sort_max_heap(new_node, root);
 	return (new_node);
 }
