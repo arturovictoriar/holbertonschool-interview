@@ -1,4 +1,8 @@
 #!/usr/bin/python3
+"""
+    Get the minumun operation recursive
+    it take a lot time with numbers bigger than 40
+"""
 
 
 def min_c(m, n, i, c):
