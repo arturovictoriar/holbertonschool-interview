@@ -1,33 +1,37 @@
 #!/usr/bin/python3
+'''Print stats from html request'''
 import sys
 
+if __name__ == "__main__":
+    size = [0]
+    codes = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
 
-def print_stats(number_status, total_size):
-    """
-    Print the stats of the request
-    """
-    print("File size: {}".format(total_size))
-    for status_req, num_status in number_status.items():
-        if num_status != 0:
-            print("{}: {}".format(status_req, num_status))
-        number_status[status_req] = 0
+    def print_stats():
+        '''Print status'''
+        print("File size: {}".format(size[0]))
+        for k in sorted(codes.keys()):
+            if codes[k]:
+                print("{}: {}".format(k, codes[k]))
 
-number_status = {
-    "200": 0, "301": 0, "400": 0, "401": 0,
-    "403": 0, "404": 0, "405": 0, "500": 0
-}
-i = 1
-total_size = 0
-
-try:
-    for line in sys.stdin:
-        parse_line = line.split(" ")
-        total_size += int(parse_line[8])
-        number_status[parse_line[7]] += 1
-        if i % 10 == 0:
-            print_stats(number_status, total_size)
-            total_size = 0
-        i += 1
-except KeyboardInterrupt:
-    print_stats(number_status, total_size)
-    raise
+    def get_status_file_size(line):
+        '''Get the status and file_size'''
+        try:
+            line = line[:-1]
+            words = line.split(" ")
+            size[0] += int(words[-1])
+            code = int(words[-2])
+            if code in codes:
+                codes[code] += 1
+        except:
+            pass
+    i = 1
+    try:
+        for line in sys.stdin:
+            get_status_file_size(line)
+            if i % 10 == 0:
+                print_stats()
+            i += 1
+    except KeyboardInterrupt:
+        print_stats()
+        raise
+    print_stats()
