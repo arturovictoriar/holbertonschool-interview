@@ -39,11 +39,14 @@ def main():
     """Read a line and save request information"""
     i = 1
     for line in sys.stdin:
-        parse_line = line.split(" ")
-        if parse_line[7] in general_stat:
-            general_stat[parse_line[7]]["number_status"] += 1
-            general_stat[parse_line[7]]["file_size"] += int(parse_line[8])
-        total_size["total"] += int(parse_line[8])
+        try:
+            parse_line = line.split(" ")
+            total_size["total"] += int(parse_line[8])
+            if parse_line[7] in general_stat:
+                general_stat[parse_line[7]]["number_status"] += 1
+                general_stat[parse_line[7]]["file_size"] += int(parse_line[8])
+        except:
+            pass
         if i % 10 == 0:
             print_stats()
         i += 1
