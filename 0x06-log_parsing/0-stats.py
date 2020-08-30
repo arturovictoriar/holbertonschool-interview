@@ -13,6 +13,7 @@
 """
 
 import signal
+import sys
 
 general_stat = {}
 
@@ -36,8 +37,8 @@ def signal_handler(signal, frame):
 
 def main():
     """Read a line and save request information"""
-    for i in range(10000):
-        line = input()
+    i = 0
+    for line in sys.stdin:
         parse_line = line.split()
         if parse_line[7] not in general_stat:
             general_stat[parse_line[7]] = {"number_status": 0, "file_size": 0}
@@ -45,6 +46,7 @@ def main():
         general_stat[parse_line[7]]["file_size"] += int(parse_line[7], base=10)
         if (i + 1) % 10 == 0:
             print_stats()
+        i += 1
 
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
