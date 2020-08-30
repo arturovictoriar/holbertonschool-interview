@@ -24,23 +24,19 @@ def signal_handler(signal, frame):
     print_stats()
 
 
-def main():
-    """Read a line and save request information"""
-    i = 1
-    for line in sys.stdin:
-        try:
-            parse_line = line.split(" ")
-            if parse_line[7] not in general_stat:
-                general_stat[parse_line[7]] = {"number_status": 0,
-                                               "file_size": 0}
-            general_stat[parse_line[7]]["number_status"] += 1
-            general_stat[parse_line[7]]["file_size"] += int(parse_line[8])
-            if i % 10 == 0:
-                print_stats()
-            i += 1
-        except:
-            pass
-
-if __name__ == "__main__":
-    signal.signal(signal.SIGINT, signal_handler)
-    main()
+signal.signal(signal.SIGINT, signal_handler)
+i = 1
+for line in sys.stdin:
+    try:
+        parse_line = line.split(" ")
+        if parse_line[7] not in general_stat:
+            general_stat[parse_line[7]] = {"number_status": 0,
+                                           "file_size": 0}
+        general_stat[parse_line[7]]["number_status"] += 1
+        general_stat[parse_line[7]]["file_size"] += int(parse_line[8])
+        if i % 10 == 0:
+            print_stats()
+            general_stat = {}
+        i += 1
+    except:
+        pass
