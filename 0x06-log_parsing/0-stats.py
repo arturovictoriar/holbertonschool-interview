@@ -1,42 +1,46 @@
 #!/usr/bin/python3
-"""
-    According this input request:
-    <IP Address> - [<date>] "GET /projects/260 HTTP/1.1"
-    <status code> <file size>
-    Print the request statistics in the next way:
-    File size: <total size>
-    <status code>: <number>
-    .
-    .
-    .
-    <status code>: <number>
-"""
+"""Print statistics from html request"""
 
+import signal
 import sys
 
 general_stat = {}
-size_file = 0
 
 
 def print_stats():
     """Print the request statistics"""
-    print("File size: {}".format(size_file))
+    msg_to_print = ''
+    file_size = 0
     for status_request in sorted(general_stat.keys()):
         number_status = general_stat[status_request]["number_status"]
-        print("{}: {}".format(status_request, number_status))
+        msg_to_print += "{}: {}".format(status_request, number_status)
+        msg_to_print += '\n'
+        file_size += general_stat[status_request]["file_size"]
+    print("File size: {}\n{}".format(file_size, msg_to_print), end="")
 
-try:
+
+def signal_handler(signal, frame):
+    """Print the stats when ctrl-c interruption will be activated"""
+    print_stats()
+
+
+def main():
+    """Read a line and save request information"""
     i = 1
     for line in sys.stdin:
-        parse_line = line.split(' ')
-        if parse_line[7] not in general_stat:
-            general_stat[parse_line[7]] = {"number_status": 0, "file_size": 0}
-        general_stat[parse_line[7]]["number_status"] += 1
-        general_stat[parse_line[7]]["file_size"] += int(parse_line[8])
-        size_file += int(parse_line[8])
-        if i % 10 == 0:
-            print_stats()
-        i += 1
-except KeyboardInterrupt:
-    print_stats()
-    raise
+        try:
+            parse_line = line.split(" ")
+            if parse_line[7] not in general_stat:
+                general_stat[parse_line[7]] = {"number_status": 0,
+                                               "file_size": 0}
+            general_stat[parse_line[7]]["number_status"] += 1
+            general_stat[parse_line[7]]["file_size"] += int(parse_line[8])
+            if i % 10 == 0:
+                print_stats()
+            i += 1
+        except:
+            pass
+
+if __name__ == "__main__":
+    signal.signal(signal.SIGINT, signal_handler)
+    main()
