@@ -33,29 +33,28 @@ def print_stats():
         if number_status:
             msg_to_print = "{}: {}".format(status_request, number_status)
             print(msg_to_print)
-
-
-def main():
-    """Read a line and save request information"""
-    i = 1
-    for line in sys.stdin:
-        try:
-            parse_line = line.split(" ")
-            total_size["total"] += int(parse_line[8])
-            if parse_line[7] in general_stat:
-                general_stat[parse_line[7]]["number_status"] += 1
-                general_stat[parse_line[7]]["file_size"] += int(parse_line[8])
-        except:
-            pass
-        if i % 10 == 0:
-            print_stats()
-        i += 1
+            
+def assign_values(line):
+    """save the values parsed"""
+    try:
+        parse_line = line.split(" ")
+        total_size["total"] += int(parse_line[8])
+        if parse_line[7] in general_stat:
+            general_stat[parse_line[7]]["number_status"] += 1
+            general_stat[parse_line[7]]["file_size"] += int(parse_line[8])
+    except:
+        pass
 
 
 if __name__ == "__main__":
     try:
-        main()
+        i = 1
+        for line in sys.stdin:
+            assign_values(line)
+            if i % 10 == 0:
+                print_stats()
+            i += 1
+        print_stats()
     except KeyboardInterrupt:
         print_stats()
         raise
-    print_stats()
