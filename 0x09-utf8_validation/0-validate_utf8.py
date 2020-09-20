@@ -12,10 +12,11 @@ def validUTF8(data):
     num_bytes = 0
     for char_d in data:
         byte = char_d & 0xff
-        if num_bytes and byte & 0b10000000 and byte & 0b01000000:
-            return False
-        num_bytes -= 1
-        num_bytes = max(num_bytes, 0)
+        if num_bytes:
+            if (byte & 0b10000000 and byte & 0b01000000) or byte & 0b01000000:
+                return False
+            num_bytes -= 1
+            continue
         while (7 - num_bytes) and byte & (1 << (7 - num_bytes)):
             num_bytes += 1
         if num_bytes == 1 or num_bytes > 4:
