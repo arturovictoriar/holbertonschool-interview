@@ -13,14 +13,16 @@ def validUTF8(data):
     for char_d in data:
         byte = char_d & 0xff
         if num_bytes:
-            if (byte & 0b10000000 and byte & 0b01000000) or byte & 0b01000000:
+            if (byte >> 6 == 1 or byte >> 6 == 3):
                 return False
             num_bytes -= 1
             continue
-        while (7 - num_bytes) and byte & (1 << (7 - num_bytes)):
+
+        while 7 - num_bytes and byte & (1 << (7 - num_bytes)):
             num_bytes += 1
         if num_bytes == 1 or num_bytes > 4:
             return False
+        num_bytes = max(num_bytes - 1, 0)
 
     if num_bytes:
         return False
