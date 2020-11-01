@@ -51,16 +51,14 @@ avl_t *make_binary_tree(int *array, size_t first, size_t last,
 		last_node = create_alv_node(array[first - 1]);
 		if (or == 'l')
 		{
-			parent->left = new_node, new_node->parent = parent;
-			last_node->parent = new_node, new_node->left = last_node;
+			parent->left = last_node, last_node->parent = parent;
+			new_node->parent = last_node, last_node->right = new_node;
 		}
 		else if (or == 'r')
 		{
 			parent->right = last_node, last_node->parent = parent;
 			new_node->parent = last_node, last_node->right = new_node;
 		}
-		else
-			new_node->left = last_node, last_node->parent = new_node;
 	}
 	else
 	{
@@ -82,7 +80,21 @@ avl_t *make_binary_tree(int *array, size_t first, size_t last,
  */
 avl_t *sorted_array_to_avl(int *array, size_t size)
 {
+	avl_t *new_node = NULL, *last_node = NULL;
+
 	if (!array || size == 0)
 		return (NULL);
+	if (size == 1)
+	{
+		new_node = create_alv_node(array[0]);
+		return (new_node);
+	}
+	if (size == 2)
+	{
+		new_node = create_alv_node(array[1]);
+		last_node = create_alv_node(array[0]);
+		last_node->right = new_node, new_node->parent = last_node;
+		return (last_node);
+	}
 	return (make_binary_tree(array, 1, size, NULL, 'n'));
 }
