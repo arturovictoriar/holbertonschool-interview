@@ -40,6 +40,4 @@ def rain(walls):
     """
     if not walls:
         return 0
-    print(retained_water(walls, 0))
-    print(retained_water(walls[::-1], 1))
     return retained_water(walls, 0) + retained_water(walls[::-1], 1)
