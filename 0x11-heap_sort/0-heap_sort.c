@@ -1,66 +1,65 @@
 #include "sort.h"
 
 /**
- * swap_heap - interchange 2 values of a given list
- * @arr: list of numbers
- * @index1: index of the value1 to swap
- * @index2: index of the value2 to swap
- * @len_arr: original len arr
- * Return: Nothing
- */
-void swap_heap(int *arr, size_t index1, size_t index2, size_t len_arr)
+  * swap_s - swap two element of a list
+  * @array: array
+  * @i: index
+  * @j: j
+  * @size: size
+  * Return: nothing
+  */
+void swap_s(int *array, int i, int j, int size)
 {
-	int temp = 0;
+	int copy_num = 0;
 
-	temp = arr[index1];
-	arr[index1] = arr[index2];
-	arr[index2] = temp;
-	print_array(arr, len_arr);
+	copy_num = array[i];
+	array[i] = array[j];
+	array[j] = copy_num;
+	print_array(array, size);
 }
 
 /**
- * heapify - organize the given list into max heap
- * @arr: list of integers
- * @node: parent node
- * @len_heap: len of the heap sort arr
- * @len_arr: original len array
- * Return: Nothing
- */
-void heapify(int *arr, size_t node, size_t len_heap, size_t len_arr)
+  * heaphy - Selection sort
+  * @array: array
+  * @si: si
+  * @bin: bin
+  * @size: size
+  * Return: nothing
+  */
+void heaphy(int *array, int si, int bin, int size)
 {
-	size_t pre_node = node;
-	size_t child_left = (node * 2) + 1, child_right = (node * 2) + 2;
+	int largt = bin, left = (bin * 2) + 1, rigth = (bin * 2) + 2;
 
-	if (child_left < len_heap && arr[child_left] > arr[node])
-		node = child_left;
+	if (left < si && array[left] > array[largt])
+		largt = left;
 
-	if (child_right < len_heap && arr[child_right] > arr[node])
-		node = child_right;
+	if (rigth < si && array[rigth] > array[largt])
+		largt = rigth;
 
-	if (pre_node != node)
-		(swap_heap(arr, pre_node, node, len_arr),
-		 heapify(arr, node, len_heap, len_arr));
+	if (largt != bin)
+	{
+		swap_s(array, bin, largt, size);
+		heaphy(array, si, largt, size);
+	}
 }
 
 /**
- * heap_sort - sort a given list using heapsort
- * @array: list of integers
- * @size: len of the array
- * Return: Nothing
- */
+  * heap_sort - Selection sort
+  * @array: array
+  * @size: size
+  * Return: nothing
+  */
 void heap_sort(int *array, size_t size)
 {
-	size_t node = 0, len_heap = size - 1;
+	int bin = 0, si = size;
 
-	for (node = 0; node <= (size / 2) - 1; node++)
-		heapify(array, ((size / 2) - 1) - node, size, size);
+	for (bin = (size / 2) - 1; bin >= 0; bin--)
+		heaphy(array, si, bin, size);
 
-	for (node = 0; node < size; node++)
+	for (bin = size - 1; bin >= 0; bin--)
 	{
-		if (size - 1 - node != 0)
-			swap_heap(array, 0, len_heap, size);
-
-		heapify(array, 0, len_heap, size);
-		len_heap--;
+		if (bin != 0)
+			swap_s(array, bin, 0, size);
+		heaphy(array, bin, 0, size);
 	}
 }
