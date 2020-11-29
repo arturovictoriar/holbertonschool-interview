@@ -1,11 +1,11 @@
 #include "sort.h"
 
 /**
-  * swap_s - swap two element of a list
-  * @array: array
-  * @i: index
-  * @j: j
-  * @size: size
+  * swap_s - interchange 2 values of a given list
+  * @array: list of numbers
+  * @i: index of the value1 to swap
+  * @j: index of the value2 to swap
+  * @size: original len arr
   * Return: nothing
   */
 void swap_s(int *array, int i, int j, int size)
@@ -19,11 +19,11 @@ void swap_s(int *array, int i, int j, int size)
 }
 
 /**
-  * heaphy - Selection sort
-  * @array: array
-  * @si: si
-  * @bin: bin
-  * @size: size
+  * heaphy - organize the given list into max heap
+  * @array: list of integers
+  * @si: len of the heap sort arr
+  * @bin: parent node
+  * @size: original len array
   * Return: nothing
   */
 void heaphy(int *array, int si, int bin, int size)
@@ -44,9 +44,9 @@ void heaphy(int *array, int si, int bin, int size)
 }
 
 /**
-  * heap_sort - Selection sort
-  * @array: array
-  * @size: size
+  * heap_sort - sort a given list using heapsort
+  * @array: list of integers
+  * @size: len of the array
   * Return: nothing
   */
 void heap_sort(int *array, size_t size)
