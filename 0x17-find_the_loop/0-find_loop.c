@@ -9,10 +9,15 @@ listint_t *find_listint_loop(listint_t *head)
 {
 	listint_t *t = NULL, *h = NULL;
 
+	if (head == NULL)
+		return (NULL);
+
 	t = JUMP_T(head);
-	if (t)
-		h = JUMP_H(head);
-	else
+	if (t == NULL)
+		return (NULL);
+
+	h = JUMP_H(head);
+	if (h == NULL)
 		return (NULL);
 
 	while (t != h)
