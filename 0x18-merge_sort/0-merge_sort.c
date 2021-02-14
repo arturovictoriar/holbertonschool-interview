@@ -8,18 +8,11 @@
  * @mid: mid index
  * @end: end index
  */
-void top_down_merge_sort(int *arr, int *c_arr, int start, int mid, int end)
+void top_down_merge_sort(int *arr, int start, int mid, int end, int *c_arr)
 {
 	int i = 0, j = 0, k = 0;
 
 	i = start, j = mid;
-
-	printf("Merging...\n");
-	printf("[left]: ");
-	print_array(&(c_arr[start]), mid - start);
-	printf("[right]: ");
-	print_array(&(c_arr[mid]), end - mid);
-
 	k = start;
 	while (k < end)
 	{
@@ -36,9 +29,35 @@ void top_down_merge_sort(int *arr, int *c_arr, int start, int mid, int end)
 		}
 		k++;
 	}
+}
 
+/**
+ * top_down_merge_split - use divide an conquer to split the array
+ * @arr: arr
+ * @c_arr: copy array
+ * @start: start index
+ * @end: end index
+ * Return: nothing
+ */
+void top_down_merge_split(int *c_arr, size_t start, size_t end, int *arr)
+{
+	size_t mid = 0;
+
+	if (end - start <= 1)
+		return;
+	mid = (end + start) / 2;
+
+	top_down_merge_split(arr, start, mid, c_arr);
+	top_down_merge_split(arr, mid, end, c_arr);
+	/*Organize the subarrays*/
+	top_down_merge_sort(c_arr, start, mid, end, arr);
+	printf("Merging...\n");
+        printf("[left]: ");
+        print_array(&(c_arr[start]), mid - start);
+        printf("[right]: ");
+        print_array(&(c_arr[mid]), end - mid);
 	printf("[Done]: ");
-	print_array(&(c_arr[start]), end - start);
+        print_array(&(arr[start]), end - start);
 }
 
 /**
@@ -50,40 +69,15 @@ void top_down_merge_sort(int *arr, int *c_arr, int start, int mid, int end)
  */
 void arr_cpy(int *array, int *new_arr, size_t size)
 {
-	size_t i = 0;
+        size_t i = 0;
 
-	/*Copy the data of the array in the new array*/
-	i = 0;
-	while (i < size)
-	{
-		new_arr[i] = array[i];
-		i++;
-	}
-}
-
-/**
- * top_down_merge_split - use divide an conquer to split the array
- * @arr: arr
- * @c_arr: copy array
- * @start: start index
- * @end: end index
- * @s: entire size of arr
- * Return: nothing
- */
-void top_down_merge_split(int *arr, int *c_arr, int start, int end, size_t s)
-{
-	int mid = 0;
-
-	if (end - start <= 1)
-		return;
-	mid = (end + start) / 2;
-
-	top_down_merge_split(arr, c_arr, start, mid, s);
-	top_down_merge_split(arr, c_arr, mid, end, s);
-	/*Organize the subarrays*/
-	top_down_merge_sort(arr, c_arr, start, mid, end);
-	/*update the merge*/
-	arr_cpy(c_arr, arr, s);
+        /*Copy the data of the array in the new array*/
+        i = 0;
+        while (i < size)
+        {
+                new_arr[i] = array[i];
+                i++;
+        }
 }
 
 /**
@@ -94,7 +88,6 @@ void top_down_merge_split(int *arr, int *c_arr, int start, int end, size_t s)
  */
 void merge_sort(int *array, size_t size)
 {
-	size_t i = 0;
 	int *c_array = NULL;
 
 	/*Allocate memory for copy array*/
@@ -104,16 +97,8 @@ void merge_sort(int *array, size_t size)
 
 	/*Copy the entry array*/
 	arr_cpy(array, c_array, size);
-
 	/*Divide and conquer sort*/
-	top_down_merge_split(array, c_array, 0, (int) size, size);
-	/*Copy the data sorted in the entry array*/
-	i = 0;
-	while (i < size)
-	{
-		array[i] = c_array[i];
-		i++;
-	}
+	top_down_merge_split(c_array, 0, size, array);
 	/*Free the heap memory allocated*/
 	free(c_array);
 }
