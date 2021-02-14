@@ -52,12 +52,12 @@ void top_down_merge_split(int *c_arr, size_t start, size_t end, int *arr)
 	/*Organize the subarrays*/
 	top_down_merge_sort(c_arr, start, mid, end, arr);
 	printf("Merging...\n");
-        printf("[left]: ");
-        print_array(&(c_arr[start]), mid - start);
-        printf("[right]: ");
-        print_array(&(c_arr[mid]), end - mid);
+	printf("[left]: ");
+	print_array(&(c_arr[start]), mid - start);
+	printf("[right]: ");
+	print_array(&(c_arr[mid]), end - mid);
 	printf("[Done]: ");
-        print_array(&(arr[start]), end - start);
+	print_array(&(arr[start]), end - start);
 }
 
 /**
@@ -69,15 +69,15 @@ void top_down_merge_split(int *c_arr, size_t start, size_t end, int *arr)
  */
 void arr_cpy(int *array, int *new_arr, size_t size)
 {
-        size_t i = 0;
+	size_t i = 0;
 
-        /*Copy the data of the array in the new array*/
-        i = 0;
-        while (i < size)
-        {
-                new_arr[i] = array[i];
-                i++;
-        }
+	/*Copy the data of the array in the new array*/
+	i = 0;
+	while (i < size)
+	{
+		new_arr[i] = array[i];
+		i++;
+	}
 }
 
 /**
