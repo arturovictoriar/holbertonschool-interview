@@ -1,7 +1,6 @@
 #ifndef DC_LIST
 #define DC_LIST
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
