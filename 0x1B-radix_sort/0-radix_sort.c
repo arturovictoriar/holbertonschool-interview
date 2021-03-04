@@ -22,8 +22,8 @@ int max_num(int *arr, size_t size)
 * radix_order - sort a list depending a specific digit
 * @arr: list of numbers
 * @size: array length
-* @d: digit represent units, decend, etc..
-* Return: the array orderer by a specific digit, NULL otherwise
+* @d: digit represent units, tens, etc..
+* Return: the array ordered by a specific digit, NULL otherwise
 */
 int *radix_order(int *arr, size_t size, int d)
 {
@@ -63,7 +63,7 @@ void radix_sort(int *array, size_t size)
 {
 	int max_n = 0, dig = 0;
 
-	if (array == NULL && size < 2)
+	if (array == NULL || size < 2)
 		return;
 
 	max_n = max_num(array, size);
